@@ -68,7 +68,7 @@ int process_options(int argc, char** argv, bool rmat_generator, struct options* 
   try {
     po::store(po::parse_command_line(argc, argv, cmdline_options), vm);
     po::notify(vm);
-  } catch (boost::program_options::error) {
+  } catch (boost::program_options::error& e) {
     err = true;
   }
 
