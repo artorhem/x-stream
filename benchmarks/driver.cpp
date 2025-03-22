@@ -18,6 +18,8 @@
 
 //! Main driver for benchmark programs
 #include "../utils/boost_log_wrapper.h"
+#include "../utils/memcounter.h"
+#include <chrono>
 // Core
 #ifdef PYTHON_SUPPORT
   #include "../core/sg_driver_python.hpp"
@@ -82,6 +84,10 @@
 
 int main(int argc, const char* argv[])
 {
+  _flexograph_profile::MemoryCounter memcounter;
+  _flexograph_profile::Times timer;
+  timer.start();
+
   /* Parse the cmd line */
   setup_options(argc, argv);
 
@@ -152,13 +158,16 @@ int main(int argc, const char* argv[])
   ADD_ALGORITHM(triangle_counting, algorithm::triangle_counting::triangle_counting, 2, false);
   ADD_ALGORITHM(bc, algorithm::bc::bc, 1, false);
 
-  else {
-    BOOST_LOG_TRIVIAL(fatal) << "Don't know how to run " <<
-      vm["benchmark"].as<std::string>() << 
-      " on " << vm["graph"].as<std::string>();
-    exit(-1);
-  }
+//  else {
+//    BOOST_LOG_TRIVIAL(fatal) << "Don't know how to run " <<
+//      vm["benchmark"].as<std::string>() <<
+//      " on " << vm["graph"].as<std::string>();
+//    exit(-1);
+//  }
   BOOST_LOG_TRIVIAL(info) << "SHUTDOWN";
+  timer.stop();
+
+  BOOST_LOG_TRIVIAL(info) << "Total time: " << timer.t_secs();
   return 0;
 } 
 
